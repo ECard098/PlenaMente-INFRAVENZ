@@ -1,0 +1,51 @@
+# ==========================================
+# 1. Credenciales y Configuración Sensible
+# ==========================================
+# Ignorar el archivo real de conexión a BD para no filtrar contraseñas
+/app/Config/Database.php
+# Ignorar archivos de variables de entorno (si llegas a usarlos)
+.env
+.env.*
+!.env.example
+
+# ==========================================
+# 2. Dependencias de Terceros
+# ==========================================
+# Ignorar la carpeta vendor generada por Composer (Ej. PHPMailer, DomPDF)
+/vendor/
+
+# ==========================================
+# 3. Archivos de Logs y Caché
+# ==========================================
+*.log
+/logs/
+/cache/
+/tmp/
+
+# ==========================================
+# 4. Archivos de Base de Datos
+# ==========================================
+# Ignorar cualquier volcado de BD por accidente...
+*.sql
+*.sqlite
+# ...EXCEPTO el script oficial de instalación que mencionaste en el README
+!bd_plenamente.sql
+
+# ==========================================
+# 5. Archivos del Sistema Operativo
+# ==========================================
+.DS_Store
+.DS_Store?
+._*
+.Trashes
+Thumbs.db
+ehthumbs.db
+
+# ==========================================
+# 6. Configuraciones de Editores de Código (IDE)
+# ==========================================
+/.vscode/
+/.idea/
+*.sublime-workspace
+*.suo
+*.swp
