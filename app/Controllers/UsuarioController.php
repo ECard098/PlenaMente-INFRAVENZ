@@ -55,4 +55,64 @@ class UsuarioController extends Controller {
             }
         }
     }
+
+    // Muestra el formulario con los datos actuales
+    public function editar($id = null) {
+        if (!$id) {
+            header('Location: ' . BASE_URL . '/usuario');
+            exit;
+        }
+
+        $usuarioModel = $this->modelo('Usuario');
+        $usuario = $usuarioModel->obtenerPorId($id);
+
+        // Si el usuario no existe, lo regresamos
+        if (!$usuario) {
+            header('Location: ' . BASE_URL . '/usuario');
+            exit;
+        }
+
+        // Le enviamos los datos a la vista
+        $this->vista('usuarios/editar', ['usuario' => $usuario]);
+    }
+
+    // Procesa los cambios
+    public function actualizar($id) {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $nombre = trim($_POST['nombre_completo']);
+            $correo = trim($_POST['correo']);
+            $id_rol = $_POST['id_rol'];
+            $estado = $_POST['estado']; // Agregamos el estado (Activo/Inactivo)
+            $password = $_POST['password'];
+
+            $password_hash = null;
+            // Solo encriptamos si el usuario escribió algo en el campo de contraseña
+            if (!empty($password)) {
+                $password_hash = password_hash($password, PASSWORD_DEFAULT);
+            }
+
+            $usuarioModel = $this->modelo('Usuario');
+            $usuarioModel->actualizarUsuario($id, $id_rol, $nombre, $correo, $estado, $password_hash);
+
+            // Redirigimos a la lista
+            header('Location: ' . BASE_URL . '/usuario');
+            exit;
+        }
+    }
+
+    // Procesa la eliminación lógica
+    public function eliminar($id = null) {
+        // Verificamos que nos envíen un ID
+        if ($id) {
+            // REGLA DE SEGURIDAD: Evitar que el usuario activo se desactive a sí mismo
+            if ($id != $_SESSION['usuario_id']) {
+                $usuarioModel = $this->modelo('Usuario');
+                $usuarioModel->eliminarLogico($id);
+            }
+        }
+
+        // Ya sea que se eliminó o intentó eliminarse a sí mismo, lo regresamos a la tabla
+        header('Location: ' . BASE_URL . '/usuario');
+        exit;
+    }
 }

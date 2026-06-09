@@ -51,6 +51,15 @@ class AuthController extends Controller {
         }
     }
 
-    
+    // 3. Cerrar sesión
+    public function logout() {
+        // Destruimos todas las variables de sesión
+        session_unset();
+        session_destroy();
+        
+        // Lo regresamos al login
+        header('Location: /plenamente-infravenz/public/auth/login');
+        exit;
+    }
 }
 ?>
