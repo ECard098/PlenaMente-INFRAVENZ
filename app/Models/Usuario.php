@@ -12,6 +12,19 @@ class Usuario {
         $this->db = (new Database())->getConnection();
     }
 
+    // Función para buscar un usuario por su correo electrónico
+    public function obtenerPorCorreo($correo) {
+        // Asumimos que tu tabla se llama 'usuarios'
+        $query = "SELECT * FROM usuarios WHERE correo = :correo LIMIT 1";
+        
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':correo', $correo);
+        $stmt->execute();
+        
+        // Retorna un arreglo asociativo con los datos del usuario o false si no existe
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
     // Obtener todos los usuarios 
     public function obtenerTodos() {
         $sql = "SELECT * FROM usuarios ORDER BY id_usuario DESC";
@@ -19,6 +32,15 @@ class Usuario {
         $stmt->execute();
         
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    // Obtener un usuario específico por su ID
+    public function obtenerPorId($id) {
+        $sql = "SELECT * FROM usuarios WHERE id_usuario = :id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':id', $id);
+        $stmt->execute();
+        return $stmt->fetch(\PDO::FETCH_ASSOC);
     }
 
     // función para Registrar Usuario (PBI-05)
@@ -35,7 +57,6 @@ class Usuario {
         
         return $stmt->execute();
     }
-}
 
     // Actualizar los datos del usuario
     public function actualizarUsuario($id, $id_rol, $nombre_completo, $correo, $estado, $password_hash = null) {
@@ -59,4 +80,13 @@ class Usuario {
         
         return $stmt->execute();
     }
+
+    // Eliminación lógica: Solo cambia el estado a Inactivo
+    public function eliminarLogico($id) {
+        $sql = "UPDATE usuarios SET estado = 'Inactivo' WHERE id_usuario = :id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':id', $id);
+        return $stmt->execute();
+    }
+}
 ?>

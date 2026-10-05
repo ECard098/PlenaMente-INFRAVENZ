@@ -1,0 +1,10 @@
+Options -MultiViews
+RewriteEngine On
+
+# Si la ruta no es una carpeta real que exista
+RewriteCond %{REQUEST_FILENAME} !-d
+# Si la ruta no es un archivo real que exista (como tu style.css)
+RewriteCond %{REQUEST_FILENAME} !-f
+
+# Redirige todo al index.php
+RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]
