@@ -40,6 +40,7 @@ class AuthController extends Controller {
                 // Si está Activo, todo bien. Creamos las variables de sesión
                 $_SESSION['usuario_id'] = $usuario['id_usuario'];
                 $_SESSION['usuario_nombre'] = $usuario['nombre_completo'];
+                $_SESSION['id_rol'] = $usuario['id_rol'];
                 
                 // Lo enviamos a su Dashboard
                 header('Location: ' . BASE_URL . '/dashboard');
@@ -51,6 +52,15 @@ class AuthController extends Controller {
         }
     }
 
-    
+    // 3. Cerrar sesión
+    public function logout() {
+        // Destruimos todas las variables de sesión
+        session_unset();
+        session_destroy();
+        
+        // Lo regresamos al login
+        header('Location: /plenamente-infravenz/public/auth/login');
+        exit;
+    }
 }
 ?>
