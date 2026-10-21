@@ -466,9 +466,36 @@ ALTER TABLE `sesiones_clinicas`
 --
 -- Filtros para la tabla `usuarios`
 --
+ALTER TABLE `pacientes` 
+  ADD COLUMN `estado_paciente` enum('Activo','Inactivo') NOT NULL DEFAULT 
+'Activo' AFTER `nombre_responsable`; 
+ 
+CREATE TABLE `auditoria_acciones` ( 
+  `id_auditoria` int(11) NOT NULL, 
+  `id_usuario` int(11) DEFAULT NULL, 
+  `accion` varchar(50) NOT NULL, 
+  `entidad` varchar(50) NOT NULL, 
+  `id_entidad` int(11) DEFAULT NULL, 
+  `descripcion` text DEFAULT NULL, 
+  `fecha` datetime NOT NULL 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci; 
+ 
+ALTER TABLE `auditoria_acciones` 
+  ADD PRIMARY KEY (`id_auditoria`), 
+  ADD KEY `fk_auditoria_usuarios` (`id_usuario`); 
+ 
+ALTER TABLE `auditoria_acciones` 
+  MODIFY `id_auditoria` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1; 
+ 
+ALTER TABLE `auditoria_acciones` 
+  ADD CONSTRAINT `fk_auditoria_usuarios` FOREIGN KEY (`id_usuario`) REFERENCES 
+`usuarios` (`id_usuario`) ON DELETE SET NULL ON UPDATE CASCADE; 
+
+
 ALTER TABLE `usuarios`
   ADD CONSTRAINT `fk_usuarios_roles` FOREIGN KEY (`id_rol`) REFERENCES `roles` (`id_rol`) ON UPDATE CASCADE;
 COMMIT;
+
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
