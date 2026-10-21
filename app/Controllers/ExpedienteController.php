@@ -29,8 +29,7 @@ class ExpedienteController extends Controller {
         ]); 
     } 
  
-    // Mostrar el formulario para abrir un expediente (pasa el id del 
-paciente seleccionado) 
+    // Mostrar el formulario para abrir un expediente (pasa el id del paciente seleccionado) 
     public function crear($id_paciente) { 
         $pacienteModel = $this->modelo('Paciente'); 
         $expedienteModel = $this->modelo('Expediente'); 
@@ -42,8 +41,7 @@ abierto.');
             $this->redirect(BASE_URL . '/expediente'); 
         } 
  
-        // Buscamos los datos básicos del paciente para mostrarlos en 
-el formulario 
+        // Buscamos los datos básicos del paciente para mostrarlos en el formulario 
         $paciente = $pacienteModel->obtenerPorId($id_paciente); 
  
         if (!$paciente) { 
@@ -131,8 +129,7 @@ $modeloExpediente->obtenerHistorialExpediente($id);
         ]); 
     } 
  
-    // Mostrar el formulario para actualizar los antecedentes clínicos 
-del expediente 
+    // Mostrar el formulario para actualizar los antecedentes clínicos del expediente 
     public function editar($id_expediente) { 
         $modeloExpediente = $this->modelo('Expediente'); 
         $expediente = $modeloExpediente->obtenerPorId($id_expediente); 
@@ -147,8 +144,7 @@ del expediente
         ]); 
     } 
  
-    // Procesar la actualización de antecedentes conservando el 
-historial de cambios 
+    // Procesar la actualización de antecedentes conservando el historial de cambios 
     public function actualizar() { 
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') { 
             $this->redirect(BASE_URL . '/expediente'); 
@@ -176,8 +172,7 @@ trim($_POST['antecedentes_familiares']) : null;
  
         $id_usuario = (int)$_SESSION['usuario_id']; 
  
-        // Verificamos cada campo: solo se registra en el historial si 
-hubo un cambio real 
+        // Verificamos cada campo: solo se registra en el historial si hubo un cambio real 
         $cambios = [ 
             'Antecedentes familiares' => 
 [$expediente['antecedentes_familiares'], $antecedentes_familiares], 
@@ -218,8 +213,7 @@ iguales a los actuales.');
 $id_expediente); 
     } 
  
-    // Cambiar el estado del caso (Activo, Seguimiento, Cerrado) 
-registrando el historial 
+    // Cambiar el estado del caso (Activo, Seguimiento, Cerrado) registrando el historial 
     public function cambiar_estado() { 
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') { 
             $this->redirect(BASE_URL . '/expediente'); 
@@ -298,8 +292,7 @@ Debe crearlo primero.');
         } 
  
         $this->redirect(BASE_URL . 
-"/expediente/nueva_sesion/{$expediente['id_expediente']}?id_cita={$id_c
-ita}"); 
+"/expediente/nueva_sesion/{$expediente['id_expediente']}?id_cita={$id_cita}"); 
     } 
  
     // Mostrar formulario de nueva sesión 
@@ -386,8 +379,7 @@ $modeloExpediente->obtenerSesionPorId((int)$id_sesion);
         ]); 
     } 
  
-    // Procesar la actualización de una sesión conservando el historial 
-de cambios 
+    // Procesar la actualización de una sesión conservando el historial de cambios 
     public function actualizar_sesion() { 
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') { 
             $this->redirect(BASE_URL . '/expediente'); 
@@ -430,8 +422,7 @@ $id_sesion);
             'notas_evolucion'         => 'Notas de Evolución' 
         ]; 
  
-        // Solo registrar en el historial los campos que realmente 
-cambiaron 
+        // Solo registrar en el historial los campos que realmente cambiaron 
         $hayCambios = false; 
         foreach ($campos as $campo => $nuevo) { 
             $viejo = $sesion[$campo]; 
