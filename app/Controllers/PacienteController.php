@@ -82,8 +82,7 @@ $apellidos, $fecha_nacimiento, $genero, $tipo_paciente, $grado_seccion,
 $telefono_contacto, $correo_paciente, $nombre_responsable); 
  
             if ($exito) { 
-                Logger::info('Paciente creado', ['nie_dui' => $nie_dui, 
-'nombres' => $nombres, 'apellidos' => $apellidos]); 
+                Logger::info('Paciente creado', ['nie_dui' => $nie_dui, 'nombres' => $nombres, 'apellidos' => $apellidos]); 
                 Flash::success('Paciente registrado correctamente.'); 
                 $this->redirect(BASE_URL . '/paciente'); 
             } else { 
