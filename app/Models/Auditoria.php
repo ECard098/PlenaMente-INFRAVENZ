@@ -42,3 +42,4 @@ PDO::PARAM_INT : PDO::PARAM_NULL);
         return $stmt->fetchAll(PDO::FETCH_ASSOC); 
     } 
 } 
+ 
