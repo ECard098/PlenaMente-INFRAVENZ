@@ -9,13 +9,11 @@ class Expediente {
     private $db; 
  
     public function __construct() { 
-        // Conectamos a la base de datos exactamente igual que en 
-Paciente.php 
+        // Conectamos a la base de datos exactamente igual que en Paciente.php 
         $this->db = (new Database())->getConnection(); 
     } 
  
-    // Obtener todos los expedientes haciendo un JOIN con pacientes 
-para ver sus nombres 
+    // Obtener todos los expedientes haciendo un JOIN con pacientes para ver sus nombres 
     public function obtenerTodos() { 
         $sql = "SELECT e.*, p.nie_dui, p.nombres, p.apellidos, 
 p.tipo_paciente 
@@ -27,8 +25,7 @@ p.tipo_paciente
         return $stmt->fetchAll(PDO::FETCH_ASSOC); 
     } 
  
-    // Verificar si un paciente ya cuenta con un expediente abierto 
-(Evita duplicados) 
+    // Verificar si un paciente ya cuenta con un expediente abierto (Evita duplicados) 
     public function verificarSiExiste($id_paciente) { 
         $sql = "SELECT id_expediente FROM expedientes WHERE id_paciente 
 = :id_paciente LIMIT 1"; 
@@ -57,8 +54,7 @@ $antecedentes_medicos);
         return $stmt->execute(); 
     } 
  
-    // Obtener un expediente específico por su ID con todos los datos 
-detallados del paciente 
+    // Obtener un expediente específico por su ID con todos los datos detallados del paciente 
     public function obtenerPorId($id_expediente) { 
         $sql = "SELECT e.*, p.nie_dui, p.nombres, p.apellidos, 
 p.tipo_paciente, 
@@ -88,8 +84,7 @@ p.nombre_responsable
         return $stmt->fetchAll(PDO::FETCH_ASSOC); 
     } 
  
-    // Obtener el expediente anterior y siguiente para la navegación 
-entre registros 
+    // Obtener el expediente anterior y siguiente para la navegaciónentre registros 
     public function obtenerVecinos($id_expediente) { 
         $sql = "SELECT 
                     (SELECT e2.id_expediente FROM expedientes e2 WHERE 
@@ -104,8 +99,7 @@ siguiente";
         return $stmt->fetch(PDO::FETCH_ASSOC); 
     } 
  
-    // Actualizar los antecedentes clínicos del expediente (sin tocar 
-el resto del registro) 
+    // Actualizar los antecedentes clínicos del expediente (sin tocar el resto del registro) 
     public function actualizarAntecedentes($id_expediente, 
 $antecedentes_familiares, $antecedentes_medicos) { 
         $sql = "UPDATE expedientes 
@@ -121,8 +115,7 @@ $antecedentes_medicos : null);
         return $stmt->execute(); 
     } 
  
-    // Actualizar el estado del caso del expediente (Activo, 
-Seguimiento, Cerrado) 
+    // Actualizar el estado del caso del expediente (Activo, Seguimiento, Cerrado) 
     public function actualizarEstado($id_expediente, $estado) { 
         $sql = "UPDATE expedientes SET estado_caso = :estado WHERE 
 id_expediente = :id_expediente"; 
@@ -133,8 +126,7 @@ PDO::PARAM_INT);
         return $stmt->execute(); 
     } 
  
-    // Registrar en el historial un cambio en los antecedentes del 
-expediente 
+    // Registrar en el historial un cambio en los antecedentes del expediente 
     public function registrarCambioExpediente($id_expediente, 
 $id_usuario, $tipo_cambio, $valor_anterior, $valor_nuevo) { 
         $sql = "INSERT INTO historial_expedientes (id_expediente, 
@@ -166,8 +158,7 @@ DESC";
         return $stmt->fetchAll(PDO::FETCH_ASSOC); 
     } 
  
-    // Obtener una sesión clínica específica con los datos de su 
-expediente 
+    // Obtener una sesión clínica específica con los datos de su expediente 
     public function obtenerSesionPorId($id_sesion) { 
         $sql = "SELECT sc.*, e.id_expediente, p.nombres, p.apellidos, 
 p.nie_dui 
@@ -198,8 +189,7 @@ $observaciones, $intervencion, $notas) {
         return $stmt->execute(); 
     } 
  
-    // Registrar en el historial un cambio en un campo de una sesión 
-clínica 
+    // Registrar en el historial un cambio en un campo de una sesión clínica 
     public function registrarCambioSesion($id_sesion, $id_usuario, 
 $campo, $valor_anterior, $valor_nuevo) { 
         $sql = "INSERT INTO historial_sesiones (id_sesion, id_usuario, 
@@ -215,8 +205,7 @@ campo, valor_anterior, valor_nuevo, fecha_modificacion)
         return $stmt->execute(); 
     } 
  
-    // Obtener todo el historial de cambios de las sesiones de un 
-expediente (para agrupar en la vista) 
+    // Obtener todo el historial de cambios de las sesiones de un expediente (para agrupar en la vista) 
     public function 
 obtenerHistorialSesionesPorExpediente($id_expediente) { 
         $sql = "SELECT hs.*, u.nombre_completo 
@@ -254,8 +243,7 @@ null, !empty($id_cita) ? PDO::PARAM_INT : PDO::PARAM_NULL);
         return $stmt->execute(); 
     } 
  
-    // Obtener los datos básicos de una cita (para saber qué paciente 
-la agendó) 
+    // Obtener los datos básicos de una cita (para saber qué paciente la agendó) 
     public function obtenerCitaPorId($id_cita) { 
         $sql = "SELECT * FROM citas WHERE id_cita = :id_cita LIMIT 1"; 
         $stmt = $this->db->prepare($sql); 
