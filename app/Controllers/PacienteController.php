@@ -95,8 +95,7 @@ $nie_dui]);
         } 
     } 
  
-    // Pantalla de confirmación (GET) y procesamiento (POST) de la eliminación 
-lógica del paciente 
+    // Pantalla de confirmación (GET) y procesamiento (POST) de la eliminación lógica del paciente 
     public function eliminar($id_paciente) { 
         $pacienteModel = $this->modelo('Paciente'); 
         $paciente = $pacienteModel->obtenerPorId((int)$id_paciente); 
@@ -116,8 +115,7 @@ $pacienteModel->contarDependencias((int)$paciente['id_paciente']);
         $critico = array_sum(array_map('intval', $dependencias)) > 0; 
  
         if ($_SERVER['REQUEST_METHOD'] === 'POST') { 
-            // Validación reforzada: si hay información crítica se exige 
-escribir el NIE/DUI y aceptar 
+            // Validación reforzada: si hay información crítica se exige escribir el NIE/DUI y aceptar 
             if ($critico) { 
                 $confirmacion = trim($_POST['confirmacion_nie'] ?? ''); 
                 $acepta = isset($_POST['aceptar']); 
@@ -202,8 +200,7 @@ $paciente['id_paciente']]);
         $this->redirect(BASE_URL . '/paciente?inactivos=1'); 
     } 
  
-    // Registrar en la tabla de auditoría (sin interrumpir la operación si 
-falla) 
+    // Registrar en la tabla de auditoría (sin interrumpir la operación si falla) 
     private function registrarAuditoria($accion, $entidad, $id_entidad, 
 $descripcion) { 
         try { 
@@ -237,4 +234,4 @@ $descripcion) {
         } 
         return $partes ? implode(', ', $partes) : 'ninguno'; 
     } 
-}
+} 
