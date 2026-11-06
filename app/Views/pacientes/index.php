@@ -101,6 +101,12 @@ if (!empty($busquedaActual)) {
                                ➕ Abrir Exp
                             </a>
                         <?php endif; ?>
+                        <a href="<?php echo BASE_URL; ?>/paciente/editar/<?php echo $p['id_paciente']; ?>" 
+                           title="Actualizar Datos del Paciente"
+                           class="btn"
+                           style="background-color: #17a2b8; color: white; padding: 6px 12px; font-size: 12px; text-decoration: none; border-radius: 4px; display: inline-block;">
+                           ✏️ Editar
+                        </a>
                         <a href="<?php echo BASE_URL; ?>/paciente/eliminar/<?php echo $p['id_paciente']; ?>" 
                            title="Eliminar Paciente"
                            class="btn"
@@ -108,6 +114,12 @@ if (!empty($busquedaActual)) {
                            🗑️ Eliminar
                         </a>
                     <?php else: ?>
+                        <a href="<?php echo BASE_URL; ?>/paciente/editar/<?php echo $p['id_paciente']; ?>" 
+                           title="Actualizar Datos del Paciente"
+                           class="btn"
+                           style="background-color: #17a2b8; color: white; padding: 6px 12px; font-size: 12px; text-decoration: none; border-radius: 4px; display: inline-block;">
+                           ✏️ Editar
+                        </a>
                         <form method="POST" action="<?php echo BASE_URL; ?>/paciente/reactivar/<?php echo $p['id_paciente']; ?>" style="display: inline;">
                             <button type="submit"
                                     title="Reactivar Paciente"

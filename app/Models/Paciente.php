@@ -77,6 +77,52 @@ class Paciente {
         return $stmt->fetch(\PDO::FETCH_ASSOC);
     }
 
+    // Verificar si un NIE/DUI ya está registrado en otro paciente (unicidad)
+    public function nieDuiexiste($nie_dui, $excluir_id_paciente = null) {
+        $sql = "SELECT COUNT(*) FROM pacientes WHERE nie_dui = :nie";
+        if ($excluir_id_paciente !== null) {
+            $sql .= " AND id_paciente <> :id";
+        }
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':nie', $nie_dui);
+        if ($excluir_id_paciente !== null) {
+            $stmt->bindValue(':id', (int)$excluir_id_paciente, PDO::PARAM_INT);
+        }
+        $stmt->execute();
+        return ((int)$stmt->fetchColumn()) > 0;
+    }
+
+    // Actualizar los datos de un paciente existente
+    public function actualizar($id_paciente, $nie_dui, $nombres, $apellidos, $fecha_nacimiento, $genero, $tipo_paciente, $grado_seccion, $telefono_contacto, $correo_paciente, $nombre_responsable) {
+        $sql = "UPDATE pacientes SET
+                    nie_dui = :nie_dui,
+                    nombres = :nombres,
+                    apellidos = :apellidos,
+                    fecha_nacimiento = :fecha_nacimiento,
+                    genero = :genero,
+                    tipo_paciente = :tipo_paciente,
+                    grado_seccion = :grado_seccion,
+                    telefono_contacto = :telefono_contacto,
+                    correo_paciente = :correo_paciente,
+                    nombre_responsable = :nombre_responsable
+                WHERE id_paciente = :id";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':nie_dui', $nie_dui);
+        $stmt->bindValue(':nombres', $nombres);
+        $stmt->bindValue(':apellidos', $apellidos);
+        $stmt->bindValue(':fecha_nacimiento', $fecha_nacimiento);
+        $stmt->bindValue(':genero', $genero);
+        $stmt->bindValue(':tipo_paciente', $tipo_paciente);
+        $stmt->bindValue(':grado_seccion', $grado_seccion);
+        $stmt->bindValue(':telefono_contacto', $telefono_contacto);
+        $stmt->bindValue(':correo_paciente', $correo_paciente);
+        $stmt->bindValue(':nombre_responsable', $nombre_responsable);
+        $stmt->bindValue(':id', (int)$id_paciente, PDO::PARAM_INT);
+
+        return $stmt->execute();
+    }
+
     // Detalle de registros dependientes del paciente (para validar la eliminación/desactivación)
     public function contarDependencias($id_paciente) {
         $sql = "SELECT

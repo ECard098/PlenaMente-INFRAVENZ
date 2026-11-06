@@ -64,3 +64,22 @@ plenamente/
 * **camelCase** para Métodos y Funciones (ej. obtenerAsistenciasPorFecha(), registrarAsistencia()).
 * **snake_case** para Variables, Arrays y columnas de Base de Datos (ej. id_expediente, fecha_registro).
 
+---
+
+## 🧪 Pruebas
+
+| Recurso | Ubicación | Descripción |
+|---|---|---|
+| **Plan de pruebas** | [`docs/PLAN_PRUEBAS.md`](docs/PLAN_PRUEBAS.md) | DoD, estrategia, casos de prueba (Suites A–F) y matriz de trazabilidad Historia → Caso |
+| **Smoke test** | [`tests/smoke_paciente.php`](tests/smoke_paciente.php) | Validación automática de modelos y reglas de negocio contra la BD local |
+
+```bash
+# Validación de sintaxis de un archivo
+C:\xampp\php\php.exe -l app\Models\Paciente.php
+
+# Ejecución del arnés de humo (crea y destruye datos SMOKE-TEST-*)
+C:\xampp\php\php.exe tests\smoke_paciente.php
+```
+
+> El smoke test **nunca** debe ejecutarse contra la base de datos de producción.
+
