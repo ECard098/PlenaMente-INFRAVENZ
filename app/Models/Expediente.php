@@ -96,6 +96,15 @@ class Expediente {
         return $stmt->execute();
     }
 
+    // Actualizar el estado del caso del expediente (Activo, Seguimiento, Cerrado)
+    public function actualizarEstado($id_expediente, $estado) {
+        $sql = "UPDATE expedientes SET estado_caso = :estado WHERE id_expediente = :id_expediente";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':estado', $estado);
+        $stmt->bindValue(':id_expediente', $id_expediente, PDO::PARAM_INT);
+        return $stmt->execute();
+    }
+
     // Registrar en el historial un cambio en los antecedentes del expediente
     public function registrarCambioExpediente($id_expediente, $id_usuario, $tipo_cambio, $valor_anterior, $valor_nuevo) {
         $sql = "INSERT INTO historial_expedientes (id_expediente, id_usuario, tipo_cambio, valor_anterior, valor_nuevo, fecha_modificacion) 

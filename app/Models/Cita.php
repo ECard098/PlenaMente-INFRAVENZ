@@ -136,4 +136,41 @@ class Cita {
         $stmt->execute();
         return $stmt->rowCount() > 0;
     }
+
+    // Verifica disponibilidad: ¿existe otra cita Programada del mismo psicólogo
+    // que solape en la franja de 1 hora con el horario propuesto?
+    // Devuelve la cita en conflicto (datos básicos) o false si el horario está libre.
+    public function hayConflictoHorario($fecha_hora, $id_usuario_psicologo, $excluir_id_cita = null) {
+        $sql = "SELECT c.id_cita, c.fecha_hora, p.nombres, p.apellidos
+                FROM citas c
+                INNER JOIN pacientes p ON c.id_paciente = p.id_paciente
+                WHERE c.estado_cita = 'Programada'
+                  AND c.id_usuario_psicologo = :id_psicologo
+                  AND ABS(TIMESTAMPDIFF(MINUTE, c.fecha_hora, :nueva)) < 60";
+        if ($excluir_id_cita !== null) {
+            $sql .= " AND c.id_cita <> :excluir";
+        }
+        $sql .= " ORDER BY c.fecha_hora ASC LIMIT 1";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':id_psicologo', (int)$id_usuario_psicologo, PDO::PARAM_INT);
+        $stmt->bindValue(':nueva', $fecha_hora);
+        if ($excluir_id_cita !== null) {
+            $stmt->bindValue(':excluir', (int)$excluir_id_cita, PDO::PARAM_INT);
+        }
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    // Reprogramar una cita (fecha y hora), solo si sigue en estado Programada
+    public function actualizarFechaHora($id_cita, $fecha_hora) {
+        $sql = "UPDATE citas 
+                SET fecha_hora = :fecha 
+                WHERE id_cita = :id AND estado_cita = 'Programada'";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':fecha', $fecha_hora);
+        $stmt->bindValue(':id', (int)$id_cita, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->rowCount() > 0;
+    }
 }

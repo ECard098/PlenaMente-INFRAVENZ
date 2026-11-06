@@ -183,6 +183,56 @@ class ExpedienteController extends Controller {
         $this->redirect(BASE_URL . '/expediente/ver/' . $id_expediente);
     }
 
+    // Cambiar el estado del caso (Activo, Seguimiento, Cerrado) registrando el historial
+    public function cambiar_estado() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $this->redirect(BASE_URL . '/expediente');
+        }
+
+        $id_expediente = (int)($_POST['id_expediente'] ?? 0);
+        $estado = trim($_POST['estado_caso'] ?? '');
+        $estadosValidos = ['Activo', 'Seguimiento', 'Cerrado'];
+
+        if (!$id_expediente || !in_array($estado, $estadosValidos, true)) {
+            Flash::error('Estado del caso inválido.');
+            $this->redirect(BASE_URL . '/expediente');
+        }
+
+        $modeloExpediente = $this->modelo('Expediente');
+        $expediente = $modeloExpediente->obtenerPorId($id_expediente);
+
+        if (!$expediente) {
+            Flash::error('Expediente no encontrado.');
+            $this->redirect(BASE_URL . '/expediente');
+        }
+
+        $estadoAnterior = $expediente['estado_caso'] ?? 'Activo';
+
+        if ($estadoAnterior === $estado) {
+            Flash::success('El estado del caso ya es el seleccionado.');
+            $this->redirect(BASE_URL . '/expediente/ver/' . $id_expediente);
+        }
+
+        $id_usuario = (int)$_SESSION['usuario_id'];
+        $ok = $modeloExpediente->actualizarEstado($id_expediente, $estado);
+
+        if ($ok) {
+            $modeloExpediente->registrarCambioExpediente($id_expediente, $id_usuario, 'Estado del caso', $estadoAnterior, $estado);
+            Logger::info('Estado del caso actualizado', [
+                'id_expediente' => $id_expediente,
+                'anterior' => $estadoAnterior,
+                'nuevo' => $estado,
+                'usuario' => $id_usuario
+            ]);
+            Flash::success('Estado del caso actualizado a "' . $estado . '". El cambio quedó registrado en el historial.');
+        } else {
+            Logger::error('Error al actualizar estado del caso', ['id_expediente' => $id_expediente]);
+            Flash::error('No se pudo actualizar el estado del caso.');
+        }
+
+        $this->redirect(BASE_URL . '/expediente/ver/' . $id_expediente);
+    }
+
     // Puente inteligente: Recibe el ID de la cita desde la agenda
     public function atender_cita($id_cita) {
         $modeloExpediente = $this->modelo('Expediente');

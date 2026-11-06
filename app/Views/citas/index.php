@@ -94,6 +94,9 @@
                                 <a href="<?php echo BASE_URL; ?>/expediente/atender_cita/<?php echo $cita['id_cita']; ?>" class="btn btn-success" style="background-color: #28a745; border: none; padding: 6px 12px; font-size: 13px; text-decoration: none; color: white; border-radius: 4px; display: inline-block;">
                                     ▶️ Atender
                                 </a>
+                                <a href="<?php echo BASE_URL; ?>/cita/editar/<?php echo $cita['id_cita']; ?>" class="btn" style="background-color: #17a2b8; border: none; padding: 6px 12px; font-size: 13px; text-decoration: none; color: white; border-radius: 4px; display: inline-block;">
+                                    ✏️ Editar
+                                </a>
                                 <a href="<?php echo BASE_URL; ?>/cita/cancelar/<?php echo $cita['id_cita']; ?>" class="btn" style="background-color: #dc3545; border: none; padding: 6px 12px; font-size: 13px; text-decoration: none; color: white; border-radius: 4px; display: inline-block;">
                                     🚫 Cancelar
                                 </a>

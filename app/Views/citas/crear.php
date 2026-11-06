@@ -6,6 +6,16 @@
         <a href="<?php echo BASE_URL; ?>/cita" class="btn btn-secondary">Cancelar</a>
     </div>
 
+    <?php if (!empty($flash)): ?>
+        <?php foreach ($flash as $tipo => $mensajes): ?>
+            <?php foreach ($mensajes as $mensaje): ?>
+                <div style="padding: 12px; background-color: <?php echo $tipo == 'success' ? '#d4edda' : ($tipo == 'warning' ? '#fff3cd' : '#f8d7da'); ?>; color: <?php echo $tipo == 'success' ? '#155724' : ($tipo == 'warning' ? '#856404' : '#721c24'); ?>; border-radius: 4px; margin-bottom: 16px; font-weight: bold;">
+                    <?php echo htmlspecialchars($mensaje); ?>
+                </div>
+            <?php endforeach; ?>
+        <?php endforeach; ?>
+    <?php endif; ?>
+
     <div class="card" style="background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
         <form action="<?php echo BASE_URL; ?>/cita/guardar" method="POST">
             

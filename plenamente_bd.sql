@@ -82,7 +82,8 @@ CREATE TABLE `expedientes` (
   `id_paciente` int(11) NOT NULL,
   `fecha_apertura` date NOT NULL,
   `antecedentes_familiares` text DEFAULT NULL,
-  `antecedentes_medicos` text DEFAULT NULL
+  `antecedentes_medicos` text DEFAULT NULL,
+  `estado_caso` enum('Activo','Seguimiento','Cerrado') NOT NULL DEFAULT 'Activo'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -110,7 +111,8 @@ CREATE TABLE `pacientes` (
   `grado_seccion` varchar(50) DEFAULT NULL COMMENT 'Nulo si es empleado',
   `telefono_contacto` varchar(15) DEFAULT NULL,
   `correo_paciente` varchar(150) DEFAULT NULL,
-  `nombre_responsable` varchar(150) DEFAULT NULL COMMENT 'Importante para menores de edad'
+  `nombre_responsable` varchar(150) DEFAULT NULL COMMENT 'Importante para menores de edad',
+  `estado_paciente` enum('Activo','Inactivo') NOT NULL DEFAULT 'Activo'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -270,6 +272,20 @@ CREATE TABLE `recordatorios_citas` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
+-- Estructura de tabla para la tabla `auditoria_acciones`
+--
+
+CREATE TABLE `auditoria_acciones` (
+  `id_auditoria` int(11) NOT NULL,
+  `id_usuario` int(11) DEFAULT NULL,
+  `accion` varchar(50) NOT NULL,
+  `entidad` varchar(50) NOT NULL,
+  `id_entidad` int(11) DEFAULT NULL,
+  `descripcion` text DEFAULT NULL,
+  `fecha` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
 -- Índices para tablas volcadas
 --
 
@@ -342,6 +358,13 @@ ALTER TABLE `recordatorios_citas`
   ADD PRIMARY KEY (`id_recordatorio`),
   ADD KEY `fk_recordatorios_citas` (`id_cita`),
   ADD KEY `fk_recordatorios_usuarios` (`id_usuario`);
+
+--
+-- Indices de la tabla `auditoria_acciones`
+--
+ALTER TABLE `auditoria_acciones`
+  ADD PRIMARY KEY (`id_auditoria`),
+  ADD KEY `fk_auditoria_usuarios` (`id_usuario`);
 
 --
 -- Indices de la tabla `roles`
@@ -424,6 +447,12 @@ ALTER TABLE `recordatorios_citas`
   MODIFY `id_recordatorio` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 
 --
+-- AUTO_INCREMENT de la tabla `auditoria_acciones`
+--
+ALTER TABLE `auditoria_acciones`
+  MODIFY `id_auditoria` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+
+--
 -- AUTO_INCREMENT de la tabla `roles`
 --
 ALTER TABLE `roles`
@@ -498,6 +527,12 @@ ALTER TABLE `recuperaciones_password`
 ALTER TABLE `recordatorios_citas`
   ADD CONSTRAINT `fk_recordatorios_citas` FOREIGN KEY (`id_cita`) REFERENCES `citas` (`id_cita`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_recordatorios_usuarios` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id_usuario`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `auditoria_acciones`
+--
+ALTER TABLE `auditoria_acciones`
+  ADD CONSTRAINT `fk_auditoria_usuarios` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id_usuario`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `sesiones_clinicas`

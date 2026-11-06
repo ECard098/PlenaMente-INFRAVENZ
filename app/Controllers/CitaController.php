@@ -126,6 +126,17 @@ class CitaController extends Controller {
             $id_usuario_psicologo = (int)$_SESSION['usuario_id'];
 
             $modeloCita = $this->modelo('Cita');
+
+            // Validar disponibilidad antes de confirmar (mismo psicólogo, franja de 1 hora)
+            $conflicto = $modeloCita->hayConflictoHorario($fecha_hora, $id_usuario_psicologo);
+            if ($conflicto) {
+                Flash::error('No hay disponibilidad en ese horario: ya tienes una cita programada el '
+                    . date('d/m/Y g:i A', strtotime($conflicto['fecha_hora'])) . ' con '
+                    . $conflicto['nombres'] . ' ' . $conflicto['apellidos'] . '. Elige otra fecha u hora.');
+                header('Location: ' . BASE_URL . '/cita/crear');
+                exit();
+            }
+
             $exito = $modeloCita->crearCita($id_paciente, $id_usuario_psicologo, $fecha_hora, $motivo);
 
             if ($exito) {
@@ -184,6 +195,75 @@ class CitaController extends Controller {
         }
 
         $this->vista('citas/cancelar', [
+            'cita'  => $cita,
+            'flash' => Flash::all()
+        ]);
+    }
+
+    // Reprogramar una cita: GET muestra el formulario con la fecha/hora actual, POST valida y actualiza
+    public function editar($id_cita) {
+        $modeloCita = $this->modelo('Cita');
+        $cita = $modeloCita->obtenerPorId((int)$id_cita);
+
+        if (!$cita) {
+            Flash::error('Cita no encontrada.');
+            $this->redirect(BASE_URL . '/cita');
+        }
+
+        if ($cita['estado_cita'] !== 'Programada') {
+            Flash::warning('Solo se pueden reprogramar citas en estado Programada.');
+            $this->redirect(BASE_URL . '/cita/ver/' . $cita['id_cita']);
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $fecha = trim($_POST['fecha_cita'] ?? '');
+            $hora  = trim($_POST['hora_cita'] ?? '');
+
+            $patronFecha = '/^\d{4}-\d{2}-\d{2}$/';
+            $patronHora  = '/^\d{2}:\d{2}$/';
+
+            if (!preg_match($patronFecha, $fecha) || !preg_match($patronHora, $hora)) {
+                Flash::error('Debes indicar una fecha y una hora válidas.');
+                $this->redirect(BASE_URL . '/cita/editar/' . $cita['id_cita']);
+            }
+
+            $fecha_hora = $fecha . ' ' . $hora . ':00';
+
+            // Si no hay cambios reales, no se actualiza nada
+            if (date('Y-m-d H:i', strtotime($cita['fecha_hora'])) === $fecha . ' ' . $hora) {
+                Flash::success('La cita mantiene la misma fecha y hora; no se realizaron cambios.');
+                $this->redirect(BASE_URL . '/cita/ver/' . $cita['id_cita']);
+            }
+
+            // Validar disponibilidad antes de confirmar (excluyendo la propia cita)
+            $conflicto = $modeloCita->hayConflictoHorario($fecha_hora, (int)$cita['id_usuario_psicologo'], (int)$cita['id_cita']);
+            if ($conflicto) {
+                Flash::error('No hay disponibilidad en ese horario: ya tienes una cita programada el '
+                    . date('d/m/Y g:i A', strtotime($conflicto['fecha_hora'])) . ' con '
+                    . $conflicto['nombres'] . ' ' . $conflicto['apellidos'] . '. Elige otro horario.');
+                $this->redirect(BASE_URL . '/cita/editar/' . $cita['id_cita']);
+            }
+
+            $exito = $modeloCita->actualizarFechaHora((int)$cita['id_cita'], $fecha_hora);
+
+            if ($exito) {
+                Logger::info('Cita reprogramada', [
+                    'id_cita'  => $cita['id_cita'],
+                    'usuario'  => $_SESSION['usuario_id'],
+                    'antes'    => $cita['fecha_hora'],
+                    'despues'  => $fecha_hora
+                ]);
+                Flash::success('La cita fue reprogramada correctamente para el '
+                    . date('d/m/Y g:i A', strtotime($fecha_hora)) . '.');
+                $this->redirect(BASE_URL . '/cita/ver/' . $cita['id_cita']);
+            } else {
+                Logger::error('No se pudo reprogramar la cita', ['id_cita' => $cita['id_cita']]);
+                Flash::error('No se pudo actualizar la cita. Intenta nuevamente.');
+                $this->redirect(BASE_URL . '/cita/editar/' . $cita['id_cita']);
+            }
+        }
+
+        $this->vista('citas/editar', [
             'cita'  => $cita,
             'flash' => Flash::all()
         ]);

@@ -1,5 +1,13 @@
 <?php require_once __DIR__ . '/../layouts/header.php'; ?>
 
+<?php
+$coloresEstadoExpediente = [
+    'Activo'      => 'background: #e8f5e9; color: #1b5e20;',
+    'Seguimiento' => 'background: #fff3cd; color: #856404;',
+    'Cerrado'     => 'background: #e9ecef; color: #555;'
+];
+?>
+
 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
     <h2 style="color: var(--violeta-principal); margin: 0;">Expedientes Clínicos Abiertos</h2>
 </div>
@@ -28,6 +36,7 @@
                     <th style="padding: 12px;">Paciente</th>
                     <th style="padding: 12px;">Tipo</th>
                     <th style="padding: 12px;">Fecha Apertura</th>
+                    <th style="padding: 12px;">Estado</th>
                     <th style="padding: 12px; text-align: center;">Acciones</th>
                 </tr>
             </thead>
@@ -45,6 +54,12 @@
                             </span>
                         </td>
                         <td style="padding: 12px;"><?php echo date('d/m/Y', strtotime($expediente['fecha_apertura'])); ?></td>
+                        <td style="padding: 12px;">
+                            <?php $estadoCaso = $expediente['estado_caso'] ?? 'Activo'; ?>
+                            <span style="padding: 4px 8px; border-radius: 12px; font-size: 12px; font-weight: bold; <?php echo $coloresEstadoExpediente[$estadoCaso] ?? $coloresEstadoExpediente['Activo']; ?>">
+                                <?php echo htmlspecialchars($estadoCaso); ?>
+                            </span>
+                        </td>
                         <td style="padding: 12px; text-align: center;">
                             <a href="<?php echo BASE_URL; ?>/expediente/ver/<?php echo $expediente['id_expediente']; ?>" class="btn btn-primary" style="padding: 6px 12px; font-size: 13px; text-decoration: none; border-radius: 4px; background-color: var(--violeta-principal); border: none;">Ver Historial</a>
                         </td>

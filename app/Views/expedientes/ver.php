@@ -1,5 +1,16 @@
 <?php require_once __DIR__ . '/../layouts/header.php'; ?>
 
+<?php
+$estadoCaso = $expediente['estado_caso'] ?? 'Activo';
+$estadosPosibles = ['Activo', 'Seguimiento', 'Cerrado'];
+$coloresEstado = [
+    'Activo'      => 'background: #e8f5e9; color: #1b5e20;',
+    'Seguimiento' => 'background: #fff3cd; color: #856404;',
+    'Cerrado'     => 'background: #e9ecef; color: #555;'
+];
+$colorEstado = $coloresEstado[$estadoCaso] ?? $coloresEstado['Activo'];
+?>
+
 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
     <h2 style="color: var(--violeta-principal); margin: 0;">
         Expediente Clínico: EXP-<?php echo str_pad($expediente['id_expediente'], 5, "0", STR_PAD_LEFT); ?>
@@ -18,6 +29,16 @@
     <div style="padding: 12px; background-color: #d4edda; color: #155724; border-radius: 4px; margin-bottom: 20px; font-weight: bold;">
         ✅ Sesión clínica registrada en el historial correctamente.
     </div>
+<?php endif; ?>
+
+<?php if (!empty($flash)): ?>
+    <?php foreach ($flash as $tipo => $mensajes): ?>
+        <?php foreach ($mensajes as $mensaje): ?>
+            <div style="padding: 12px; background-color: <?php echo $tipo == 'success' ? '#d4edda' : ($tipo == 'warning' ? '#fff3cd' : '#f8d7da'); ?>; color: <?php echo $tipo == 'success' ? '#155724' : ($tipo == 'warning' ? '#856404' : '#721c24'); ?>; border-radius: 4px; margin-bottom: 16px; font-weight: bold;">
+                <?php echo htmlspecialchars($mensaje); ?>
+            </div>
+        <?php endforeach; ?>
+    <?php endforeach; ?>
 <?php endif; ?>
 
 <style>
@@ -117,6 +138,11 @@
             <p><strong>Teléfono:</strong> <?php echo htmlspecialchars($expediente['telefono_contacto'] ?? 'N/A'); ?></p>
             <p><strong>Correo:</strong> <?php echo htmlspecialchars($expediente['correo_paciente'] ?? 'N/A'); ?></p>
             <p><strong>Apertura:</strong> <?php echo date('d/m/Y', strtotime($expediente['fecha_apertura'])); ?></p>
+            <p><strong>Estado del caso:</strong>
+                <span style="display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 12px; font-weight: bold; <?php echo $colorEstado; ?>">
+                    <?php echo htmlspecialchars($estadoCaso); ?>
+                </span>
+            </p>
         </div>
 
         <hr style="border: 0; border-top: 1px solid #eee; margin: 15px 0;">
@@ -134,6 +160,21 @@
         <a href="<?php echo BASE_URL; ?>/expediente/editar/<?php echo $expediente['id_expediente']; ?>" class="btn" style="width: 100%; padding: 8px 12px; font-size: 13px; border: 1px solid var(--violeta-principal); color: var(--violeta-principal); background: white; text-decoration: none; border-radius: 4px; text-align: center;">
             ✏️ Editar Antecedentes
         </a>
+
+        <hr style="border: 0; border-top: 1px solid #eee; margin: 15px 0;">
+
+        <h4 style="margin: 0 0 8px 0; color: var(--violeta-principal); font-size: 14px;">Estado del Caso</h4>
+        <form method="POST" action="<?php echo BASE_URL; ?>/expediente/cambiar_estado" style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+            <input type="hidden" name="id_expediente" value="<?php echo $expediente['id_expediente']; ?>">
+            <select name="estado_caso" style="flex: 1; min-width: 120px; padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px;">
+                <?php foreach ($estadosPosibles as $opcion): ?>
+                    <option value="<?php echo $opcion; ?>" <?php echo ($estadoCaso === $opcion) ? 'selected' : ''; ?>><?php echo $opcion; ?></option>
+                <?php endforeach; ?>
+            </select>
+            <button type="submit" class="btn" style="background-color: var(--violeta-principal); border: none; color: white; padding: 8px 14px; border-radius: 4px; cursor: pointer; font-size: 13px;">
+                Actualizar
+            </button>
+        </form>
     </div>
 
     <div class="card" style="background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">

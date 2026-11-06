@@ -52,6 +52,9 @@ $badge_color = $estado == 'Programada' ? '#ffc107' : ($estado == 'Completada' ? 
                 <a href="<?php echo BASE_URL; ?>/expediente/atender_cita/<?php echo $cita['id_cita']; ?>" class="btn btn-success" style="background-color: #28a745; border: none; text-decoration: none; color: white;">
                     ▶️ Atender Cita
                 </a>
+                <a href="<?php echo BASE_URL; ?>/cita/editar/<?php echo $cita['id_cita']; ?>" class="btn" style="background-color: #17a2b8; border: none; text-decoration: none; color: white;">
+                    ✏️ Reprogramar
+                </a>
                 <a href="<?php echo BASE_URL; ?>/cita/cancelar/<?php echo $cita['id_cita']; ?>" class="btn" style="background-color: #dc3545; border: none; text-decoration: none; color: white;">
                     🚫 Cancelar Cita
                 </a>
