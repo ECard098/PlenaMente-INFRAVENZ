@@ -1,0 +1,238 @@
+/*
+PlenaMente - INFRAVENZ
+Panel de metricas institucionales (analisis general para la Direccion)
+==== */
+.metricas-encabezado {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+}
+
+.metricas-controles {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+}
+
+/* Filtro de periodo */
+.metricas-periodo {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.metricas-chip {
+    padding: 7px 14px;
+    border: 1px solid #E0E0E0;
+    border-radius: 20px;
+    background: #fff;
+    color: #616161;
+    font-size: 12.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .15s ease;
+}
+
+.metricas-chip:hover {
+    border-color: var(--violeta-principal);
+    color: var(--violeta-principal);
+}
+
+.metricas-chip.activo {
+    background: var(--violeta-principal);
+    border-color: var(--violeta-principal);
+    color: #fff;
+}
+
+/* Control de actualizacion */
+.metricas-actualizacion {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.metricas-timestamp,
+.metricas-cronometro {
+    font-size: 12px;
+    color: #757575;
+}
+
+.metricas-cronometro {
+    color: var(--violeta-principal);
+    font-weight: 600;
+    min-width: 118px;
+    text-align: right;
+}
+
+.metricas-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    color: #616161;
+    cursor: pointer;
+    user-select: none;
+}
+
+.metricas-toggle input {
+    cursor: pointer;
+    margin: 0;
+}
+
+.metricas-refrescar {
+    padding: 7px 14px;
+    font-size: 12.5px;
+}
+
+/* Tarjetas de indicadores */
+.metricas-kpis {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(215px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.metrica-card {
+    background: linear-gradient(135deg, var(--violeta-principal), var(--violeta-claro));
+    color: #fff;
+    padding: 18px 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(126, 87, 194, .18);
+    display: flex;
+    flex-direction: column;
+    min-height: 132px;
+}
+
+.metrica-card-azul {
+    background: linear-gradient(135deg, var(--azul-claro), var(--azul-medio));
+    box-shadow: 0 4px 12px rgba(66, 165, 245, .18);
+}
+
+.metrica-card-verde {
+    background: linear-gradient(135deg, var(--verde-menta), var(--verde-menta-claro));
+    box-shadow: 0 4px 12px rgba(38, 166, 154, .18);
+}
+
+.metrica-card-ambar {
+    background: linear-gradient(135deg, #FFB300, #FFCA28);
+    color: #4E3A00;
+    box-shadow: 0 4px 12px rgba(255, 179, 0, .2);
+}
+
+.metrica-card-rojo {
+    background: linear-gradient(135deg, #E53935, #EF5350);
+    box-shadow: 0 4px 12px rgba(229, 57, 53, .18);
+}
+
+.metrica-label {
+    font-size: 12.5px;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    opacity: .92;
+    font-weight: 600;
+}
+
+.metrica-valor {
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1.15;
+    margin: 8px 0 6px;
+}
+
+.metrica-detalle {
+    font-size: 12px;
+    line-height: 1.45;
+    opacity: .92;
+    margin-top: auto;
+}
+
+.metrica-nota {
+    opacity: .85;
+    font-style: italic;
+}
+
+/* Paneles de graficos */
+.metricas-graficos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+    gap: 18px;
+    margin-bottom: 24px;
+}
+
+.metricas-panel {
+    padding: 18px 20px;
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .06);
+}
+
+.metricas-panel-ancho {
+    grid-column: 1 / -1;
+}
+
+.metricas-panel .card-header {
+    margin-bottom: 12px;
+}
+
+.grafico-svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+}
+
+.metricas-leyenda {
+    display: flex;
+    justify-content: center;
+    gap: 22px;
+    margin-top: 10px;
+    font-size: 12px;
+    color: #616161;
+}
+
+.metricas-leyenda span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.metricas-leyenda i {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+    display: inline-block;
+}
+
+/* Ajuste en pantallas pequenas */
+@media (max-width: 768px) {
+    .metricas-encabezado {
+        flex-direction: column;
+    }
+
+    .metricas-controles {
+        align-items: flex-start;
+        width: 100%;
+    }
+
+    .metricas-actualizacion {
+        justify-content: space-between;
+        width: 100%;
+    }
+
+    .metricas-cronometro {
+        text-align: left;
+    }
+
+    .metricas-kpis {
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    }
+
+    .metrica-valor {
+        font-size: 26px;
+    }
+}

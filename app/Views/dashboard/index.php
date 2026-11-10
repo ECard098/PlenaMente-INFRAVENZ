@@ -1,5 +1,15 @@
 <?php require_once __DIR__ . '/../layouts/header.php'; ?>
 
+<?php if (!empty($flash)): ?>
+    <?php foreach ($flash as $tipo => $mensajes): ?>
+        <?php foreach ($mensajes as $mensaje): ?>
+            <div style="padding: 12px; background-color: <?php echo $tipo == 'success' ? '#d4edda' : ($tipo == 'warning' ? '#fff3cd' : '#f8d7da'); ?>; color: <?php echo $tipo == 'success' ? '#155724' : ($tipo == 'warning' ? '#856404' : '#721c24'); ?>; border-radius: 4px; margin-bottom: 16px; font-weight: bold;">
+                <?php echo htmlspecialchars($mensaje); ?>
+            </div>
+        <?php endforeach; ?>
+    <?php endforeach; ?>
+<?php endif; ?>
+
 <h2 style="color: var(--violeta-principal); margin-bottom: 24px;">Dashboard Principal</h2>
 
 <div class="stats-grid">
